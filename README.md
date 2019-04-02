@@ -40,10 +40,10 @@ python manage.py runserver
 
 ### Install React for the frontend parts
 Download Node.js from
-[here]( https://nodejs.org/en/download/)
-When installed run this command
+[here]( https://nodejs.org/en/download/) and install it in Lavabantur/lavabantur/frontend
+When installed run this command and check that the server starts
 ```bash
-npm install -g create-react-app
+npm start
 ```
 ### Start React server
 cd into the Lavabantur/lavabantur/frontend and run
