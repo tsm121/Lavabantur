@@ -114,6 +114,6 @@ venv.bak/
 **.iml*
 
 # Lock files
-package-lock.json
+lavabantur/frontend/package-lock.json
 
-package.json
+lavabantur/frontend/package.json
