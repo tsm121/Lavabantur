@@ -18,24 +18,30 @@ class Navigation extends Component {
         return (
 
             <nav>
+
                 <Menu
                     onClick={this.handleClick}
                     selectedKeys={[this.state.current]}
                     mode="horizontal"
                 >
-                    <Menu.Item key="home">
-                        <Icon type="home" />Home
+                    <Menu.Item key={"home"}>
+                        <img id={"logo"} alt={"logo"} src={require('../images/logo.png')} />
                         <NavLink exact activeClassName="current" to='/'/>
                     </Menu.Item>
 
-                    <Menu.Item key="overview">
-                        <Icon type="overview" />Overview
+                    <Menu.Item key={"overview"}>
+                        <Icon type="book" />Overview
                         <NavLink exact activeClassName="current" to='/overview' />
                     </Menu.Item>
 
-                    <Menu.Item key="booking">
-                        <Icon type="booking" />Booking
+                    <Menu.Item key={"booking"}>
+                        <Icon type="calendar" />Booking
                         <NavLink exact activeClassName="current" to='/booking' />
+                    </Menu.Item>
+
+                    <Menu.Item key={"statistics"}>
+                        <Icon type="bar-chart" />Statistics
+                        <NavLink exact activeClassName="current" to='/statistics' />
                     </Menu.Item>
                 </Menu>
             </nav>

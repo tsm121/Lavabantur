@@ -5,7 +5,7 @@ import Navigation from "./components/Navigation";
 import Router from "./Router";
 
 import { Row, Col } from 'antd';
-
+import Footer from "./components/Footer";
 
 class App extends Component {
     render() {
@@ -19,6 +19,7 @@ class App extends Component {
                         <Router/>
                     </Col>
                 </Row>
+                <Footer/>
             </div>
         );
     }
