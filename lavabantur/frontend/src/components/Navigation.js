@@ -1,16 +1,43 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Menu, Icon } from 'antd';
 
 
 class Navigation extends Component {
+    state = {
+        current: 'home',
+    }
+
+    handleClick = (e) => {
+        this.setState({
+            current: e.key,
+        });
+    }
+
     render() {
         return (
+
             <nav>
-                <ul>
-                    <li><NavLink to='/'>Home</NavLink></li>
-                    <li><NavLink to='/overview'>Overview</NavLink></li>
-                    <li><NavLink to='/booking'>Booking</NavLink></li>
-                </ul>
+                <Menu
+                    onClick={this.handleClick}
+                    selectedKeys={[this.state.current]}
+                    mode="horizontal"
+                >
+                    <Menu.Item key="home">
+                        <Icon type="home" />Home
+                        <NavLink exact activeClassName="current" to='/'/>
+                    </Menu.Item>
+
+                    <Menu.Item key="overview">
+                        <Icon type="overview" />Overview
+                        <NavLink exact activeClassName="current" to='/overview' />
+                    </Menu.Item>
+
+                    <Menu.Item key="booking">
+                        <Icon type="booking" />Booking
+                        <NavLink exact activeClassName="current" to='/booking' />
+                    </Menu.Item>
+                </Menu>
             </nav>
         );
     }
