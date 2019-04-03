@@ -112,3 +112,8 @@ venv.bak/
 # Jetbrains
 .idea/
 **.iml*
+
+# Lock files
+package-lock.json
+
+package.json
