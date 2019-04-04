@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import 'antd/dist/antd.css';
 import './App.css';
+import Navigation from "./components/Navigation";
+import Router from "./Router";
+
+import { Row, Col } from 'antd';
+import Footer from "./components/Footer";
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <h1 style={{backgroundColor:"red"}}>Hei</h1>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <Row>
+                    <Col>
+                        <Navigation/>
+                    </Col>
+                    <Col>
+                        <Router/>
+                    </Col>
+                </Row>
+                <Footer/>
+            </div>
+        );
+    }
 }
 
 export default App;
