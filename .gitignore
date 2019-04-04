@@ -112,3 +112,10 @@ venv.bak/
 # Jetbrains
 .idea/
 **.iml*
+
+# Lock files
+lavabantur/frontend/package-lock.json
+lavabantur/frontend/yarn.lock
+
+
+lavabantur/frontend/package.json
