@@ -40,17 +40,16 @@ python manage.py runserver
 
 ### Install React for the frontend parts
 Download Node.js from
-[here]( https://nodejs.org/en/download/) and install it in Lavabantur/lavabantur/frontend
-When installed run this command and check that the server starts
+[here]( https://nodejs.org/en/download/) or brew install node.js 
+Install it in the correct folder: Lavabantur/lavabantur/frontend
 ```bash
-npm start
+npm install
 ```
 ### Start React server
-cd into the Lavabantur/lavabantur/frontend and run
+Start the server:
 ```bash
 npm start
 ```
-
 ## Git Guide
 Try to always pull before pushing a commit.
 Useful commands:
