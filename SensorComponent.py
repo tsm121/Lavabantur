@@ -2,6 +2,7 @@ from SensorController import SensorController
 import stmpy
 import paho.mqtt.client as mqtt
 import sys, getopt, threading
+from sense_hat import SenseHat
 
 class SensorComponent:
 
@@ -21,8 +22,8 @@ class SensorComponent:
         
         self.driver = stmpy.Driver()
     
-    def add_sensor(self, sensor_id):
-        sensor_controller = SensorController(sensor_id=1, sensor=0)
+    def add_sensor(self, sensor_id, sensor):
+        sensor_controller = SensorController(sensor_id, sensor)
 
         sensor_controller.mqtt_client = self.mqtt_client
 
@@ -30,9 +31,7 @@ class SensorComponent:
 
     def start(self):
         print('MQTT: Connecting to {}:{}'.format(self.broker_ip, self.broker_port))
-        print(threading.get_ident())
         self.mqtt_client.connect(self.broker_ip, self.broker_port)
-        self.mqtt_client.subscribe("#")
         self.driver.start()
 
         try:
@@ -77,7 +76,8 @@ if __name__ == "__main__":
     broker_ip, port = parse_args(sys.argv[1:])
     try:
         sensor_component = SensorComponent(str(broker_ip), int(port))
-        #sensor_component.add_sensor(1)
+        sensehat = SenseHat()
+        sensor_component.add_sensor(1, sensehat)
         sensor_component.start()
     except Exception as e:
         print(e)
