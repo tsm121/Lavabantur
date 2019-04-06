@@ -3,3 +3,5 @@ django-cors-headers==2.5.2
 djangorestframework==3.9.2
 optional-django==0.1.0
 pytz==2018.9
+stmpy
+paho-mqtt
