@@ -14,7 +14,7 @@ MQTT_TOPIC_INPUT = 'ttm4115/command'
 MQTT_TOPIC_OUTPUT = 'ttm4115/answer'
 
 
-class MachineLogic:
+class WashingMachineLogic:
     """
     State Machine for a named timer.
 
@@ -144,7 +144,7 @@ class MachineLogic:
         else:
             return (str(int(s)) + " second(s)" )"""
 
-class MachineManagerComponent:
+class WashingMachineComponent:
     """
     The component to manage named timers in a voice assistant.
 
@@ -164,6 +164,9 @@ class MachineManagerComponent:
         {"command": "status_single_timer", "name": "spaghetti"}
 
     """
+
+    mw_status = {}
+
     #Sjekk status i database
     def get_status(self):
         return
