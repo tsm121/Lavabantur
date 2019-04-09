@@ -6,15 +6,15 @@ from threading import Thread
 import json
 
 # Proper MQTT broker address
-MQTT_BROKER = '127.0.0.1'
+MQTT_BROKER = '10.0.0.119'
 MQTT_PORT = 1883
 
 # Proper topics for communication
-MQTT_TOPIC_INPUT = 'ttm4115/command'
-MQTT_TOPIC_OUTPUT = 'ttm4115/answer'
+MQTT_TOPIC_INPUT = 'wm_room1/new_stm'#'ttm4115/command'
+MQTT_TOPIC_OUTPUT = 'wm_room1/update_state'#'ttm4115/answer'
 
 
-class MachineLogic:
+class TimerLogic:
     """
     State Machine for a named timer.
 
@@ -144,7 +144,7 @@ class MachineLogic:
         else:
             return (str(int(s)) + " second(s)" )"""
 
-class MachineManagerComponent:
+class TimerManagerComponent:
     """
     The component to manage named timers in a voice assistant.
 
@@ -164,14 +164,42 @@ class MachineManagerComponent:
         {"command": "status_single_timer", "name": "spaghetti"}
 
     """
-    #Sjekk status i database
-    def get_status(self):
+    #sjekk status i database
+    def get_status(self, wm_stm):
+        return
+
+
+    #Sjekk status i stms
+    def fetch_status(self, wm_id):
+        if wm_id = None:
+            dic = {}
+            s = []
+            for stm_id in self.stm_driver._stms_by_id:
+                machine = {}
+                machine['id'] = stm_id
+                stm = self.stm_driver._stms_by_id[stm_id]
+                machine['status'] = stm.state
+                s.append(machine)
+            dic['stms'] = s
+
+
+            report = json.dumps(dic)
+
+            # Send/display status
+            print(dic)
+
+        else:
+            # Get timer/stm name
+            stm_id = payload.get('sensor')
+            stm = self.stm_driver._stms_by_id[stm_id]
+
+            # Send/display status
+            print(stm.state)
         return
 
     #Lag entry i database
     def send_msg(self, msg):
         return
-
 
     def on_connect(self, client, userdata, flags, rc):
         # we just log that we are connected
@@ -202,48 +230,21 @@ class MachineManagerComponent:
             # Get command message
             command = payload.get('command')
 
-            # Command for checking all status of all timers
-            if (command == 'status_all_machines'):
-
-                # Send status of all timers/stm's
-                # Version one (using driver status)
-                #self.mqtt_client.publish('ttm4115/answer', self.stm_driver.print_status())
-
-                # Send status of all timers/stm's
-                # Version one (iterating over each stm in driver and getting their status separate)
-                dic = {}
-                s = []
-                for stm_id in self.stm_driver._stms_by_id:
-                    machine = {}
-                    machine['id'] = stm_id
-                    stm = self.stm_driver._stms_by_id[stm_id]
-                    machine['status'] = stm.state
-                    s.append(machine)
-                dic['stms'] = s
-
-                report = json.dumps(dic)
-
-                #Send/display status
-                print(dic)
-
-            # Command for checking status of a single timer
-            elif (command == 'status_single_machine'):
-
-                # Get timer/stm name
-                stm_id = payload.get('wm_id')
-                stm = self.stm_driver._stms_by_id[stm_id]
-
-                # Send/display status
-                print(stm.state)
-
             # Command for generating a new timer
-            elif (command == 'new_machine'):
+            if (msg.topic == 'update_state'):#(command == 'update_state'):
+                stm_id = payload.get('sensor')
+                stm = self.stm_driver._stms_by_id[stm_id]
+                state = payload.get('state')
+                stm.send_signal(state)
+                last_state = {}
+
+            elif (msg.topic == 'new_machine'):#(command == 'new_machine'):
 
                 # Get timer/stm name and duration
-                stm_id = payload.get('wm_id')
+                stm_id = payload.get('sensor')
 
                 # Generate a new state machine
-                wm_stm = MachineLogic(stm_id, self)
+                wm_stm = TimerLogic(stm_id, self)
 
                 # Add timer/stm to driver
                 self.stm_driver.add_machine(wm_stm.stm)
@@ -316,4 +317,4 @@ formatter = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(m
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-t = MachineManagerComponent()
+t = TimerManagerComponent()
