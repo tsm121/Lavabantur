@@ -3,12 +3,14 @@ import { NavLink } from 'react-router-dom';
 import { Menu, Icon, Drawer } from 'antd';
 import LogInForm from "./LogInForm";
 import LogInFormDrawer from "./LogInFormDrawer";
+import RegisterFormDrawer from "./RegisterFormDrawer";
 
 
 class Navigation extends Component {
     state = {
         current: 'home',
-        visible: false,
+        visibleLogIn: false,
+        visibleRegister: false,
         placement: 'top'
     }
 
@@ -18,15 +20,34 @@ class Navigation extends Component {
         });
     }
 
-    showDrawer = () => {
+    showLogInDrawer = () => {
         this.setState({
-            visible: true,
+            visibleLogIn: true,
         });
     };
 
-    onClose = () => {
+    onCloseLogIn = () => {
         this.setState({
-            visible: false,
+            visibleLogIn: false,
+        });
+    };
+
+    showRegisterDrawer = () => {
+        this.setState({
+            visibleRegister: true,
+        });
+    };
+
+    onCloseRegister = () => {
+        this.setState({
+            visibleRegister: false,
+        });
+    };
+
+    openRegisterDrawer = () => {
+        this.setState({
+            visibleLogIn: false,
+            visibleRegister: true,
         });
     };
 
@@ -66,18 +87,34 @@ class Navigation extends Component {
                         <NavLink exact activeClassName="current" to='/statistics' />
                     </Menu.Item>
 
-                    <Menu.Item key={"login"}>
-                        <a onClick={this.showDrawer}>Log In</a>
+                    <Menu.Item key={"login"} id={"login"}>
+                        <a onClick={this.showLogInDrawer}>Log In</a>
 
                         <Drawer
                             title="Log in"
                             placement={this.state.placement}
                             closable={false}
-                            onClose={this.onClose}
-                            visible={this.state.visible}
+                            onClose={this.onCloseLogIn}
+                            visible={this.state.visibleLogIn}
                         >
-                            <LogInFormDrawer/>
+                            <LogInFormDrawer closeDrawer={this.onCloseLogIn} openRegisterDrawer={this.openRegisterDrawer}/>
                         </Drawer>
+
+                    </Menu.Item>
+
+                    <Menu.Item key={"register"} id={"register"}>
+                        <a onClick={this.showRegisterDrawer}>Register</a>
+
+                        <Drawer
+                            title="Register"
+                            placement={this.state.placement}
+                            closable={false}
+                            onClose={this.onCloseRegister}
+                            visible={this.state.visibleRegister}
+                        >
+                            <RegisterFormDrawer closeDrawer={this.onCloseRegister}/>
+                        </Drawer>
+
                     </Menu.Item>
                 </Menu>
             </nav>

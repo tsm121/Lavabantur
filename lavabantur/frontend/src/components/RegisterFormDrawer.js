@@ -6,30 +6,27 @@ import {
 } from 'react-router-dom'
 
 
-class LogInFormDrawer extends Component {
+class RegisterFormDrawer extends Component {
     constructor(props) {
         super(props);
 
-        this.handleLogInClick = this.handleLogInClick.bind(this)
         this.handleCreateUserClick = this.handleCreateUserClick.bind(this)
-
-    }
-
-    handleLogInClick () {
-        const {closeDrawer} = this.props
-
-        console.log("Clicked log in")
-        closeDrawer()
+        this.handleCancelClick = this.handleCancelClick.bind(this)
 
     }
 
     handleCreateUserClick () {
-        const {openRegisterDrawer} = this.props
+        const {closeDrawer} = this.props
 
-        console.log("Clicked register")
-        this.props.history.push('/register')
-        openRegisterDrawer()
+        console.log("Clicked create user")
+        closeDrawer()
 
+    }
+
+    handleCancelClick () {
+        const {closeDrawer} = this.props
+        closeDrawer()
+        console.log("Clicked close")
     }
 
     render() {
@@ -42,16 +39,31 @@ class LogInFormDrawer extends Component {
                         <Row>
                             <Col>
 
-                                <div>
+                                <div style={{paddingBottom:"1em"}}>
                                     <Input
-                                        placeholder="Enter your username"
+                                        placeholder="Enter a username"
                                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                     />
                                 </div>
-                                <div style={{paddingBottom:"1em", paddingTop:"1em"}}>
+
+                                <div style={{paddingBottom:"1em"}}>
+                                    <Input
+                                        placeholder="Enter your email"
+                                        prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                    />
+                                </div>
+
+                                <div style={{paddingBottom:"1em"}}>
 
                                     <Input.Password
-                                        placeholder="Input password"
+                                        placeholder="Input a password"
+                                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                    />
+                                </div>
+                                <div style={{paddingBottom:"1em"}}>
+
+                                    <Input.Password
+                                        placeholder="Repeat password"
                                         prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                     />
                                 </div>
@@ -61,10 +73,10 @@ class LogInFormDrawer extends Component {
                         <Row>
                             <Col id={"drawer-button-group"}>
 
-                                <Popover content={"Log in"} placement={"bottom"}>
+                                <Popover content={"Create user"} placement={"bottom"}>
                                     <Button
                                         className={"drawer-button"}
-                                        onClick={this.handleLogInClick}
+                                        onClick={this.handleCreateUserClick}
                                     >
                                         <Icon
                                             type="check"
@@ -75,13 +87,13 @@ class LogInFormDrawer extends Component {
                                 <span className="divider"/>
 
 
-                                <Popover content={"Create a user"} placement={"bottom"}>
+                                <Popover content={"Cancel"} placement={"bottom"}>
                                     <Button
                                         className={"drawer-button"}
-                                        onClick={this.handleCreateUserClick}
+                                        onClick={this.handleCancelClick}
                                     >
                                         <Icon
-                                            type="form"
+                                            type="close"
                                         />
                                     </Button>
                                 </Popover>
@@ -96,4 +108,4 @@ class LogInFormDrawer extends Component {
     }
 }
 
-export default withRouter(LogInFormDrawer);
+export default withRouter(RegisterFormDrawer);
