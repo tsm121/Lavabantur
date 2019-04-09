@@ -1,16 +1,38 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, Drawer } from 'antd';
+import LogInForm from "./LogInForm";
+import LogInFormDrawer from "./LogInFormDrawer";
 
 
 class Navigation extends Component {
     state = {
         current: 'home',
+        visible: false,
+        placement: 'top'
     }
 
     handleClick = (e) => {
         this.setState({
             current: e.key,
+        });
+    }
+
+    showDrawer = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    onClose = () => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+    onChange = (e) => {
+        this.setState({
+            placement: e.target.value,
         });
     }
 
@@ -42,6 +64,20 @@ class Navigation extends Component {
                     <Menu.Item key={"statistics"}>
                         <Icon type="bar-chart" />Statistics
                         <NavLink exact activeClassName="current" to='/statistics' />
+                    </Menu.Item>
+
+                    <Menu.Item key={"login"}>
+                        <a onClick={this.showDrawer}>Log In</a>
+
+                        <Drawer
+                            title="Log in"
+                            placement={this.state.placement}
+                            closable={false}
+                            onClose={this.onClose}
+                            visible={this.state.visible}
+                        >
+                            <LogInFormDrawer/>
+                        </Drawer>
                     </Menu.Item>
                 </Menu>
             </nav>
