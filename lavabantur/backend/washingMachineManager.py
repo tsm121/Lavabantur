@@ -190,7 +190,7 @@ class TimerManagerComponent:
 
         else:
             # Get timer/stm name
-            stm_id = payload.get('wm_id')
+            stm_id = payload.get('sensor')
             stm = self.stm_driver._stms_by_id[stm_id]
 
             # Send/display status
@@ -232,7 +232,7 @@ class TimerManagerComponent:
 
             # Command for generating a new timer
             if (msg.topic == 'update_state'):#(command == 'update_state'):
-                stm_id = payload.get('wm_id')
+                stm_id = payload.get('sensor')
                 stm = self.stm_driver._stms_by_id[stm_id]
                 state = payload.get('state')
                 stm.send_signal(state)
@@ -241,7 +241,7 @@ class TimerManagerComponent:
             elif (msg.topic == 'new_machine'):#(command == 'new_machine'):
 
                 # Get timer/stm name and duration
-                stm_id = payload.get('wm_id')
+                stm_id = payload.get('sensor')
 
                 # Generate a new state machine
                 wm_stm = TimerLogic(stm_id, self)
