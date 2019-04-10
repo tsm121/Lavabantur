@@ -4,7 +4,7 @@ import logging
 import json
 from threading import Thread
 import json
-from inventory.models import WashingMachineBookings
+#from models import WashingMachineBookings
 from django.utils import timezone
 from datetime import date, datetime, timedelta
 
@@ -13,8 +13,8 @@ MQTT_BROKER = '10.0.0.119'
 MQTT_PORT = 1883
 
 # Proper topics for communication
-MQTT_TOPIC_INPUT = 'sensor/new_stm'#'ttm4115/command'
-MQTT_TOPIC_OUTPUT = 'sensor/update_state'#'ttm4115/answer'
+MQTT_TOPIC_INPUT = 'sensor/#'#'ttm4115/command'
+#MQTT_TOPIC_OUTPUT = 'sensor/update_state'#'ttm4115/answer'
 
 
 class TimerLogic:
@@ -67,8 +67,7 @@ class TimerLogic:
 
         t9 = {'trigger': 'in_use',
               'source': 'available',
-              'target': 'busy',
-              'effect': 'register_booking'}
+              'target': 'busy'}
 
         t10 = {'trigger': 'error',
                'source': 'busy',
@@ -112,6 +111,8 @@ class TimerLogic:
 
     def send_msg(self, msg):
         self.component.send_msg(self, msg)
+
+
 
     #Functions from TimerLogic
     """def started(self):
@@ -172,6 +173,7 @@ class TimerManagerComponent:
 
     #sjekk status i database
     def get_status(self, wm_stm):
+        """
         sensor = wm_stm.name
         bookings = list(WashingMachineBookings.objects.filter(washing_machine = int(sensor)))
         if (wm_stm.name in error):
@@ -184,8 +186,8 @@ class TimerManagerComponent:
                 else:
                     wm_stm.send_signal('isBooked')
                 return
-
-        wm_stm.send_signal('isAvailable')
+        """
+        wm_stm.stm.send('isAvailable')
 
 
     #Sjekk status i stms
@@ -218,17 +220,19 @@ class TimerManagerComponent:
 
     #Lag entry i database
     def send_msg(self, wm_stm, msg):
+        """
         if msg == "started":
             sensor = wm_stm.name
             bookings = list(WashingMachineBookings.objects.filter(washing_machine = int(sensor)))
             for booking in bookings:
                 if(booking.start_time <= datetime.now() and booking.end_time >= datetime.now()):
-                    WashingMachineBookings.objects.filter(washing_machine = int(sensor)).filter(start_time = booking.start_time).update(used = True)
+                    #WashingMachineBookings.objects.filter(washing_machine = int(sensor)).filter(start_time = booking.start_time).update(used = True)
                     return
             booking = WashingMachineBookings(washing_machine = int(sensor), start_time = datetime.now(), end_time = datetime.now() + timedelta(hours=3), used = True)
             booking.save()
         elif msg == "error":
             self.error.append(wm_stm.name)
+        """
         return
 
     def on_connect(self, client, userdata, flags, rc):
@@ -261,16 +265,17 @@ class TimerManagerComponent:
             command = payload.get('command')
 
             # Command for generating a new timer
-            if msg.topic == 'update_state':#(command == 'update_state'):
-                stm_id = payload.get('sensor')
+            if msg.topic == 'sensor/update_state':#(command == 'update_state'):
+                stm_id = int(payload.get("sensor"))
                 stm = self.stm_driver._stms_by_id[stm_id]
-                state = payload.get('state')
-                stm.send_signal(state)
+                state = payload.get("state")
+                stm.send(state)
+                print("Updated state to {}".format(state))
                 if stm_id in self.error:
                     self.error.remove(stm_id)
-                last_state = {}
 
-            elif msg.topic == 'new_machine':#(command == 'new_machine'):
+
+            elif msg.topic == 'sensor/new_stm':#(command == 'new_machine'):
 
                 # Get timer/stm name and duration
                 stm_id = int(payload.get('sensor'))
@@ -280,6 +285,7 @@ class TimerManagerComponent:
 
                 # Add timer/stm to driver
                 self.stm_driver.add_machine(wm_stm.stm)
+                print("Added new stm {}".format(stm_id))
 
         except Exception as err:
             self._logger.error('Message sent to topic {} had no valid JSON. Message ignored. {}'.format(msg.topic, err))
@@ -349,4 +355,12 @@ formatter = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(m
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+
+
 t = TimerManagerComponent()
+
+inn = ""
+while inn != "ferdig":
+    inn = input("Skriv inn noe")
+    t.fetch_status(None)
+
