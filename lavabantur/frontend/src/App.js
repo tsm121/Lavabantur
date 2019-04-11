@@ -15,9 +15,13 @@ class App extends Component {
                     <Col>
                         <Navigation/>
                     </Col>
-                    <Col>
-                        <Router/>
-                    </Col>
+
+                    <Row type="flex" justify="space-around" align="middle">
+                        <Col span={16}>
+                            <Router/>
+                        </Col>
+
+                    </Row>
                 </Row>
                 <Footer/>
             </div>
