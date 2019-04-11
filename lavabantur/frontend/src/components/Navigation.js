@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, Icon, Drawer } from 'antd';
-import LogInForm from "./LogInForm";
 import LogInFormDrawer from "./LogInFormDrawer";
 import RegisterFormDrawer from "./RegisterFormDrawer";
 

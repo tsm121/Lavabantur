@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import {Input, Icon, Row, Card, Popover} from 'antd';
-import { browserHistory } from 'react-router';
-import {
-    withRouter
-} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 
 class LogInForm extends Component {
