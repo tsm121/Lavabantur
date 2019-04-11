@@ -4,7 +4,7 @@ import logging
 import json
 from threading import Thread
 import json
-#from models import WashingMachineBookings
+from models import WashingMachineBookings
 from django.utils import timezone
 from datetime import date, datetime, timedelta
 
@@ -93,7 +93,8 @@ class TimerLogic:
                  'entry': 'send_msg("error")',
                  'entry': 'set_timer("t", 5000)'}
 
-        available = {'name': 'available'}
+        available = {'name': 'available',
+                     'entry': 'set_timer("timeout", 5000)'}
 
         busy = {'name': 'busy',
                 'entry': 'send_msg("started")'}
@@ -211,7 +212,6 @@ class TimerManagerComponent:
 
         else:
             # Get timer/stm name
-            stm_id = payload.get('sensor')
             stm = self.stm_driver._stms_by_id[stm_id]
 
             # Send/display status
@@ -234,6 +234,18 @@ class TimerManagerComponent:
             self.error.append(wm_stm.name)
         """
         return
+
+    def create_booking(self, wm_id, start_time, end_time):
+        """"
+        bookings = list(WashingMachineBookings.objects.all())
+        for booking in bookings:
+            if (booking.washing_machine == int(wm_id) and ((booking.start_time <= end_time and booking.end_time >= end_time) or (booking.start_time <= start_time and booking.end_time >= start_time)):
+                print("Booking was not created.")
+                return False
+        booking = WashingMachineBookings(washing_machine=int(wm_id), start_time=start_time, end_time=end_time + timedelta(minutes=15))
+        booking.save()
+        print("Booking created.")"""
+        return True
 
     def on_connect(self, client, userdata, flags, rc):
         # we just log that we are connected
@@ -269,8 +281,12 @@ class TimerManagerComponent:
                 stm_id = int(payload.get("sensor"))
                 stm = self.stm_driver._stms_by_id[stm_id]
                 state = payload.get("state")
-                stm.send(state)
-                print("Updated state to {}".format(state))
+                if state == 'on':
+                    stm.send('in_use')
+                    print("Updated state to busy")
+                elif state == 'off':
+                    stm.send('available')
+                    print("Updated state to available")
                 if stm_id in self.error:
                     self.error.remove(stm_id)
 
