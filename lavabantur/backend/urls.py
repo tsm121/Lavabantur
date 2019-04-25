@@ -7,5 +7,6 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('washingmachine/', views.WashingMachineView.as_view({'get': 'list'})),
+    path('washingmachine/', views.WashingMachineView.as_view({'get': 'list','post': 'create'})),
+
 ]
