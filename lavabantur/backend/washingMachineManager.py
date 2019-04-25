@@ -1,17 +1,27 @@
 import paho.mqtt.client as mqtt
 import stmpy
+from stmpy import Machine, Driver
 import logging
+from django.utils import timezone
 import json
 from threading import Thread
 import json
+from backend.models import WashingMachineBookings
+from django.utils import timezone
+from datetime import date, datetime, timedelta
 
 # Proper MQTT broker address
-MQTT_BROKER = '10.0.0.119'
+MQTT_BROKER = '192.168.10.120'
 MQTT_PORT = 1883
 
 # Proper topics for communication
-MQTT_TOPIC_INPUT = 'wm_room1/new_stm'#'ttm4115/command'
-MQTT_TOPIC_OUTPUT = 'wm_room1/update_state'#'ttm4115/answer'
+MQTT_TOPIC_INPUT = 'sensor/#' #'ttm4115/command'
+#MQTT_TOPIC_OUTPUT = 'sensor/update_state'#'ttm4115/answer'
+
+error = []
+
+#Oversikt over sist vi hadde kontakt med stm
+stms = {}
 
 
 class TimerLogic:
@@ -64,8 +74,7 @@ class TimerLogic:
 
         t9 = {'trigger': 'in_use',
               'source': 'available',
-              'target': 'busy',
-              'effect': 'register_booking'}
+              'target': 'busy'}
 
         t10 = {'trigger': 'error',
                'source': 'busy',
@@ -83,24 +92,32 @@ class TimerLogic:
                'source': 'booked',
                'target': 'error'}
 
+        t14 = {'trigger': 'timeout',
+               'source': 'available',
+               'target': 'check_status'}
+
+        t15 = {'trigger': 'timeout',
+               'source': 'busy',
+               'target': 'check_status'}
+
         #States
         check_status = {'name': 'check_status',
                         'entry': 'get_status'}
 
         error = {'name': 'error',
-                 'entry': 'send_msg("error")',
-                 'entry': 'set_timer("t", 5000)'}
+                 'entry': 'start_timer("t", 5000)'}
 
-        available = {'name': 'available'}
+        available = {'name': 'available',
+                     'entry': 'start_timer("timeout", 5000)'}
 
         busy = {'name': 'busy',
-                'entry': 'send_msg("started")'}
+                'entry': 'send_msg("started"); start_timer("timeout", 5000)'}
 
         booked = {'name': 'booked',
-                  'entry': 'set_timer("timeout", 5000)'}
+                  'entry': 'start_timer("timeout", 5000)'}
 
 
-        self.stm = stmpy.Machine(name=name, transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13], obj=self, states = [check_status, error, available, busy, booked])
+        self.stm = stmpy.Machine(name=name, transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15], obj=self, states = [check_status, error, available, busy, booked])
 
 
     #Functions
@@ -108,10 +125,12 @@ class TimerLogic:
         self.component.get_status(self)
 
     def send_msg(self, msg):
-        self.component.send_msg(msg)
+        self.component.send_msg(self, msg)
+
+
 
     #Functions from TimerLogic
-    """def started(self):
+    def started(self):
         # Start timer
         self.stm.start_timer('timer', self.duration)
 
@@ -142,7 +161,7 @@ class TimerLogic:
         elif(m != 0):
             return (str(int(m)) + " minute(s)," + str(int(s)) + " second(s)" )
         else:
-            return (str(int(s)) + " second(s)" )"""
+            return (str(int(s)) + " second(s)" )
 
 class TimerManagerComponent:
     """
@@ -164,14 +183,38 @@ class TimerManagerComponent:
         {"command": "status_single_timer", "name": "spaghetti"}
 
     """
+
+
     #sjekk status i database
     def get_status(self, wm_stm):
-        return
+        sensor = wm_stm.name
+        bookings = list(WashingMachineBookings.objects.filter(washing_machine = str(sensor)))
+        self.check_for_error(wm_stm)
+        if (wm_stm.name in error):
+            wm_stm.stm.send('error')
+            return
+        for booking in bookings:
+            if(booking.start_time <= timezone.now() and booking.end_time >= timezone.now()):
+                if (booking.used):
+                    wm_stm.stm.send('isBusy')
+                else:
+                    wm_stm.stm.send('isBooked')
+                return
+        wm_stm.stm.send('isAvailable')
 
+
+    def check_for_error(self, wm_stm):
+        for stm in stms.keys():
+            if datetime.now() - stms[stm] > timedelta(minutes=5):
+                if stm not in error:
+                    error.append(stm)
+            elif stm in error:
+                error.remove(stm)
 
     #Sjekk status i stms
+
     def fetch_status(self, wm_id):
-        if wm_id = None:
+        if wm_id is None:
             dic = {}
             s = []
             for stm_id in self.stm_driver._stms_by_id:
@@ -181,25 +224,43 @@ class TimerManagerComponent:
                 machine['status'] = stm.state
                 s.append(machine)
             dic['stms'] = s
-
-
             report = json.dumps(dic)
 
             # Send/display status
             print(dic)
+            return dic
 
         else:
             # Get timer/stm name
-            stm_id = payload.get('sensor')
-            stm = self.stm_driver._stms_by_id[stm_id]
+            stm = self.stm_driver._stms_by_id[wm_id]
 
             # Send/display status
             print(stm.state)
-        return
+            return stm.state
 
     #Lag entry i database
-    def send_msg(self, msg):
+    def send_msg(self, wm_stm, msg):
+        if msg == "started":
+            sensor = wm_stm.name
+            bookings = list(WashingMachineBookings.objects.filter(washing_machine = str(sensor)))
+            for booking in bookings:
+                if(booking.start_time <= timezone.now() and booking.end_time >= timezone.now()):
+                    WashingMachineBookings.objects.filter(washing_machine = str(sensor)).filter(start_time = booking.start_time).update(used = True)
+                    return
+            booking = WashingMachineBookings(washing_machine = str(sensor), start_time = datetime.now(), end_time = datetime.now() + timedelta(hours=3), used = True)
+            booking.save()
         return
+
+    def create_booking(self, wm_id, start_time, end_time):
+        bookings = list(WashingMachineBookings.objects.all())
+        for booking in bookings:
+            if (booking.washing_machine == str(wm_id) and ((booking.start_time <= end_time and booking.end_time >= end_time) or (booking.start_time <= start_time and booking.end_time >= start_time))):
+                print("Booking was not created.")
+                return False
+        booking = WashingMachineBookings(washing_machine=str(wm_id), start_time=start_time, end_time=end_time + timedelta(minutes=15))
+        booking.save()
+        print("Booking created.")
+        return True
 
     def on_connect(self, client, userdata, flags, rc):
         # we just log that we are connected
@@ -231,23 +292,37 @@ class TimerManagerComponent:
             command = payload.get('command')
 
             # Command for generating a new timer
-            if (msg.topic == 'update_state'):#(command == 'update_state'):
-                stm_id = payload.get('sensor')
+            if msg.topic == 'sensor/update_state':#(command == 'update_state'):
+                stm_id = str(payload.get("sensor"))
+                stms[stm_id] = datetime.now()
                 stm = self.stm_driver._stms_by_id[stm_id]
-                state = payload.get('state')
-                stm.send_signal(state)
-                last_state = {}
+                state = payload.get("state")
+                if state == 'on':
+                    stm.send('in_use')
+                    print("Updated state to busy")
+                elif state == 'off':
+                    stm.send('available')
+                    print("Updated state to available")
+                elif state == 'error':
+                    stm.send('error')
+                    print("Updated state to error")
+                if stm_id in error:
+                    error.remove(stm_id)
 
-            elif (msg.topic == 'new_machine'):#(command == 'new_machine'):
+
+            elif msg.topic == 'sensor/new_stm':#(command == 'new_machine'):
 
                 # Get timer/stm name and duration
-                stm_id = payload.get('sensor')
+                stm_id = str(payload.get('sensor'))
 
                 # Generate a new state machine
                 wm_stm = TimerLogic(stm_id, self)
 
+                stms[stm_id] = datetime.now()
+
                 # Add timer/stm to driver
                 self.stm_driver.add_machine(wm_stm.stm)
+                print("Added new stm {}".format(stm_id))
 
         except Exception as err:
             self._logger.error('Message sent to topic {} had no valid JSON. Message ignored. {}'.format(msg.topic, err))
@@ -317,4 +392,15 @@ formatter = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(m
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+
+
 t = TimerManagerComponent()
+
+inn = ""
+while inn != "ferdig":
+    inn = input("Skriv inn noe")
+    if inn == 'sjekk':
+        print(WashingMachineBookings.objects.all())
+    else:
+        t.fetch_status(None)
+
