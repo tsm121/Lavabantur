@@ -18,9 +18,15 @@ class App extends Component {
 
         this.fetchData = this.fetchData.bind(this)
         this.savePayload = this.savePayload.bind(this)
+        this.handleUpdateData = this.handleUpdateData.bind(this)
     }
 
     componentWillMount() {
+        this.savePayload()
+    }
+
+    handleUpdateData () {
+        console.log("Fetching new data")
         this.savePayload()
     }
 
@@ -69,6 +75,7 @@ class App extends Component {
                         <Col span={16}>
                             <Router
                                 data={payload}
+                                updateData={this.handleUpdateData}
                             />
                         </Col>
 
