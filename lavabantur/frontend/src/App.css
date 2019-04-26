@@ -102,3 +102,28 @@ body {
 .center-container {
 }
 
+.statistics-view{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.statistics-header {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.by-day-statistics {
+    padding: 3rem 5rem 3rem 0;
+}
+
+.by-hour-statistics {
+    padding: 3rem 0 3rem 5rem;
+}
