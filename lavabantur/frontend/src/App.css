@@ -102,3 +102,18 @@ body {
 .center-container {
 }
 
+.status-text {
+    font-weight: bold;
+}
+
+.available-status {
+    color: #00E04A
+}
+
+.booked-status {
+    color: #EDD500
+}
+
+.busy-status {
+    color: #FC353B
+}

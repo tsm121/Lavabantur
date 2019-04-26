@@ -9,11 +9,12 @@ import Register from "./components/Register";
 
 class Router extends Component {
     render() {
+        const {data,updateData} = this.props
         return (
             <Switch>
                 <Route exact path='/' component={Home}/>
-                <Route exact path='/overview' component={Overview}/>
-                <Route exact path='/booking' component={Booking}/>
+                <Route exact path='/overview' component={() => <Overview data={data} updateData={updateData}/>}/>
+                <Route exact path='/booking' component={() => <Booking data={data} />}/>
                 <Route exact path='/statistics' component={Statistics}/>
                 <Route exact path='/register' component={Register}/>
             </Switch>
