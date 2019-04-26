@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Table} from "antd";
 const { Column } = Table;
-const NUM_MACHINES = 10;
 
 class StatusTable extends Component {
     constructor(props) {
@@ -47,6 +46,7 @@ class StatusTable extends Component {
     }
 
     formatData () {
+        const {NUM_MACHINES} = this.props
         const {payload} = this.state
         let tempTableData = new Array(NUM_MACHINES)
 
