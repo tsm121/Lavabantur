@@ -10,14 +10,40 @@ class StatusTable extends Component {
             payload: this.props.data,
             tableData: [{key:0, washingMachine:"Undefined",status:"Undefined",available:"Undefined",booking:"Undefined"}]
         }
-
-
         this.formatData = this.formatData.bind(this)
         this.formatDate = this.formatDate.bind(this)
+        this.sterilizeData = this.sterilizeData.bind(this)
+        this.formatDateToString = this.formatDateToString.bind(this)
+        this.addButton = this.addButton.bind(this)
+        this.addStatusStyle = this.addStatusStyle.bind(this)
     }
 
     componentWillMount() {
+        this.sterilizeData()
         this.formatData()
+    }
+
+    sterilizeData () {
+        const {payload} = this.state
+
+        for (let i in payload){
+            let wmItem = payload[i]
+            let tempStart_date = new Date (wmItem.start_time)
+            let tempEnd_date = new Date (wmItem.end_time)
+            wmItem.start_time = tempStart_date
+            wmItem.end_time = tempEnd_date
+        }
+    }
+
+    formatDateToString () {
+        const {tableData} = this.state
+
+        for (let i in tableData) {
+            let wmItem = tableData[i]
+            if (wmItem.available instanceof Date) {
+                wmItem.available = this.formatDate(wmItem.available).toString()
+            }
+        }
     }
 
     formatData () {
@@ -31,10 +57,20 @@ class StatusTable extends Component {
             let status = "Available"
             let listItem = {}
             let wmItem = payload[i]
-            let dateString = wmItem.end_time
-            let date = this.formatDate(dateString)
+            let today = new Date()
+            let date
 
-            if (wmItem !== undefined){
+            if (tempTableData[wmItem.washing_machine - 1] !== undefined) {
+                let registeredDate = tempTableData[wmItem.washing_machine - 1].available
+                if (today <= wmItem.end_time && wmItem.end_time <= registeredDate) {
+                    date = wmItem.end_time
+                } else {
+                    date = registeredDate
+                }
+            } else {
+                date = wmItem.end_time
+            }
+
                 if (wmItem.used) {
                     status = "Busy"
                 }
@@ -47,11 +83,10 @@ class StatusTable extends Component {
                 listItem = {
                     key: wmItem.washing_machine,
                     washingMachine: ("Machine " + wmItem.washing_machine),
-                    status: status,
+                    status: this.addStatusStyle(status),
                     available: date,
-                    booking: "Button_Here"
+                    booking: this.addButton(wmItem.washing_machine)
                 }
-            }
             tempTableData.splice(wmItem.washing_machine - 1, 1, listItem)
         }
 
@@ -64,31 +99,54 @@ class StatusTable extends Component {
                 listItem = {
                     key: i+1,
                     washingMachine: ("Machine " + (i+1)),
-                    status: status,
+                    status: this.addStatusStyle(status),
                     available: "Now",
-                    booking: "Button_Here"
+                    booking: this.addButton(i+1)
                 }
 
                 tempTableData.splice(i, 1, listItem)
             }
         }
 
+
+
         this.setState(() => (
             {tableData: tempTableData}
         ))
 
-        console.log(tempTableData)
+        //console.log(tempTableData)
 
     }
 
-    formatDate (date) {
-        let tempDate = new Date(date)
+    formatDate (tempDate) {
+        return tempDate.toLocaleTimeString("nb-NO", {
+            hourCycle: "h24",
+            hour: 'numeric',
+            minute:'2-digit'
 
-        return (tempDate.toLocaleTimeString())
+        })
+    }
+
+    addButton (name) {
+        return (
+            <Button
+                value={name}
+            >
+                <div>Book machine {name}</div>
+            </Button>
+        )
+    }
+
+    addStatusStyle(status) {
+        let statusClass = status.toLowerCase() + "-status status-text"
+        return (
+            <div className={statusClass}>{status}</div>
+        )
     }
 
     render() {
         const {tableData} = this.state
+        this.formatDateToString()
 
         return (
             <div>
@@ -114,13 +172,9 @@ class StatusTable extends Component {
                         key="available"
                     />
                     <Column
-                        title="Booking"
+                        title=""
                         key="booking"
-                        render={() => (
-                            <Button htmlType={"button"}>
-                                Book this machine
-                            </Button>
-                        )}
+                        dataIndex="booking"
                     />
                 </Table>
             </div>

@@ -51,7 +51,7 @@ class App extends Component {
                 {payload: data["data"]}
             )))
         ).then( () => {
-            console.log("App.js DATA: ",this.state.payload)
+            //console.log("App.js DATA: ",this.state.payload)
         })
 
     }
