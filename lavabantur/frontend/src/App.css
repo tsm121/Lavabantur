@@ -127,3 +127,18 @@ body {
 .by-hour-statistics {
     padding: 3rem 0 3rem 5rem;
 }
+.status-text {
+    font-weight: bold;
+}
+
+.available-status {
+    color: #00E04A
+}
+
+.booked-status {
+    color: #EDD500
+}
+
+.busy-status {
+    color: #FC353B
+}
