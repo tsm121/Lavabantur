@@ -29,7 +29,7 @@ class Statistics extends Component {
         const dataByHours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         //days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         for(let i = 0; i< data.length; i++){
-            const hour = new Date(data[i].start_time).getHours() - 4;
+            const hour = new Date(data[i].start_time).getHours() - 6;
             if (hour >= 0){
                 dataByHours[hour] += 1;
             }
@@ -84,10 +84,19 @@ class Statistics extends Component {
                     {"start_time": "2019-12-21 16:00:00"},
                     {"start_time": "2019-04-26 11:30:21"},
                     {"start_time": "2019-04-27 15:01:23"}];*/
-        const data = this.props.data
-        const days = this.getUsageByDays(data);
-        const hours = this.getUsageByHours(data);
-
+        
+        const {data} = this.props;
+        console.log("statistics", data);
+        let days = [{x: 1, y: 0}];
+        let hours = [{x: 1, y: 0}];
+        if (data){
+            days = this.getUsageByDays(data);
+            hours = this.getUsageByHours(data);
+        } else{
+            days = [{x: 1, y: 0}];
+            hours = [{x: 1, y: 0}];
+        }
+        
         return (
                 <div className="statistics-container">
                     <div className="statistics-header">

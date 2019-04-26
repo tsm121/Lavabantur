@@ -64,6 +64,7 @@ class App extends Component {
 
     render() {
         const {payload} = this.state
+        console.log(payload);
         return (
             <div>
                 <Row>
