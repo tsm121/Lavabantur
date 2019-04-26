@@ -86,7 +86,6 @@ class Statistics extends Component {
                     {"start_time": "2019-04-27 15:01:23"}];*/
         
         const {data} = this.props;
-        console.log("statistics", data);
         let days = [{x: 1, y: 0}];
         let hours = [{x: 1, y: 0}];
         if (data){

@@ -10,7 +10,6 @@ import Register from "./components/Register";
 class Router extends Component {
     render() {
         const {data,updateData} = this.props;
-        console.log("router", data);
         return (
             <Switch>
                 <Route exact path='/' component={Home}/>
