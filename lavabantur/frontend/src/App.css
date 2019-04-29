@@ -142,3 +142,24 @@ body {
 .busy-status {
     color: #FC353B
 }
+
+.booking-view-container{
+    padding: 0 0 4rem 0;
+}
+
+.booking-container {
+    height: 35rem;;
+    padding: 2rem;
+}
+
+.buttons-container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.selector-container{
+}
+
+.button-container{
+}
