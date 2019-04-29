@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Table} from "antd";
 const { Column } = Table;
-const NUM_MACHINES = 10;
 
 class StatusTable extends Component {
     constructor(props) {
@@ -47,6 +46,7 @@ class StatusTable extends Component {
     }
 
     formatData () {
+        const {NUM_MACHINES} = this.props
         const {payload} = this.state
         let tempTableData = new Array(NUM_MACHINES)
 
@@ -58,28 +58,28 @@ class StatusTable extends Component {
             let listItem = {}
             let wmItem = payload[i]
             let today = new Date()
+            let twoHoursBeforeStart = new Date(wmItem.start_time).setHours(new Date(wmItem.start_time).getHours()-2)
+            console.log(twoHoursBeforeStart)
             let date
-
-            if (tempTableData[wmItem.washing_machine - 1] !== undefined) {
-                let registeredDate = tempTableData[wmItem.washing_machine - 1].available
-                if (today <= wmItem.end_time && wmItem.end_time <= registeredDate) {
-                    date = wmItem.end_time
+            if (twoHoursBeforeStart < today && wmItem.end_time > today){
+                if (tempTableData[wmItem.washing_machine - 1] !== undefined) {
+                    let registeredDate = tempTableData[wmItem.washing_machine - 1].available
+                    if (today <= wmItem.end_time && wmItem.end_time <= registeredDate) {
+                        date = wmItem.end_time
+                    } else {
+                        date = registeredDate
+                    }
                 } else {
-                    date = registeredDate
+                    date = wmItem.end_time
                 }
-            } else {
-                date = wmItem.end_time
-            }
 
-                if (wmItem.used) {
+                if (wmItem.used && wmItem.start_time && wmItem.end_time > today) {
                     status = "Busy"
                 }
-                else if (!wmItem.used) {
+                else if (!wmItem.used && twoHoursBeforeStart < today && wmItem.end_time > today) {
                     status = "Booked"
                 }
-                else {
-                    status = "ERROR"
-                }
+    
                 listItem = {
                     key: wmItem.washing_machine,
                     washingMachine: ("Machine " + wmItem.washing_machine),
@@ -87,7 +87,9 @@ class StatusTable extends Component {
                     available: date,
                     booking: this.addButton(wmItem.washing_machine)
                 }
-            tempTableData.splice(wmItem.washing_machine - 1, 1, listItem)
+                tempTableData.splice(wmItem.washing_machine - 1, 1, listItem)
+            }
+            
         }
 
 
@@ -149,7 +151,7 @@ class StatusTable extends Component {
         this.formatDateToString()
 
         return (
-            <div>
+            <div style = {{padding: '0 0 4rem 0'}}>
                 <Table
                     dataSource={tableData}
                     id={"overview-table"}

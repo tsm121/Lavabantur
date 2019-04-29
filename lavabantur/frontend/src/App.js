@@ -7,6 +7,7 @@ import { Row, Col } from 'antd';
 import Footer from "./components/Footer";
 
 const axios = require('axios');
+const NUM_MACHINES = 10
 
 
 class App extends Component {
@@ -75,6 +76,7 @@ class App extends Component {
                         <Col span={16}>
                             <Router
                                 data={payload}
+                                NUM_MACHINES={NUM_MACHINES}
                                 updateData={this.handleUpdateData}
                             />
                         </Col>
