@@ -14,7 +14,7 @@ class Booking extends Component {
         this.state = {
             payload: this.props.data,
             listValues: [],
-            selectedMachine: ""
+            selectedMachine: "1"
         }
 
         this.generateListName = this.generateListName.bind(this)
@@ -76,6 +76,7 @@ class Booking extends Component {
                             })}
                         </Select>
                     </div>
+                    <p>{"Machine " + this.state.selectedMachine}</p>
                     <div className="button-container">
                         <Button>Add new booking</Button>
                     </div>
