@@ -23,7 +23,7 @@ class Overview extends Component {
     }
 
     render() {
-        const {data} = this.props
+        const {data,NUM_MACHINES} = this.props
         return (
             <div className={"center-container"}>
                 <h1>Overview</h1>
@@ -31,6 +31,7 @@ class Overview extends Component {
 
                     <StatusTable
                         data={data}
+                        NUM_MACHINES={NUM_MACHINES}
                     />
 
                     <Button type="primary" loading={this.state.loading} onClick={this.handleUpdateButtonClick}>
