@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import StatusTable from "./StatusTable";
-import {Button, Icon} from "antd";
+import {Button} from "antd";
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 
@@ -18,7 +18,6 @@ class Overview extends Component {
         this.setState({ loading: true });
         await delay(500);
         updateData()
-        console.log("Data updated")
         this.setState({ loading: false });
     }
 

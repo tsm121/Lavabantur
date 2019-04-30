@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import { Select, Col, Row, Button } from 'antd';
+import { Select } from 'antd';
 import '../App.css';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
-import Router from '../Router';
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import RegisterBooking from "./RegisterBooking";
 const Option = Select.Option;
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -58,9 +58,8 @@ class Booking extends Component {
     }
 
     render() {
-        const {listValues} = this.state;
+        const {listValues, selectedMachine} = this.state;
         const bookings = this.formatBookings()
-        console.log("bookings", bookings);
         return (
             <div className = "booking-view-container">
                 <h1>Booking</h1>
@@ -78,11 +77,14 @@ class Booking extends Component {
                     </div>
                     <p>{"Machine " + this.state.selectedMachine}</p>
                     <div className="button-container">
-                        <Button>Add new booking</Button>
+                        <RegisterBooking
+                            listValues={listValues}
+                            selectedMachine={selectedMachine}
+                        />
                     </div>
                 </div>
                 <div className="booking-container">
-                    <BigCalendar 
+                    <BigCalendar
                         defaultView = 'week'
                         scrollToTime = {new Date(Date.now())}
                         localizer = {localizer}
@@ -91,7 +93,7 @@ class Booking extends Component {
                         endAccessor = "end" />
                 </div>
 
-                {/*<Dayz 
+                {/*<Dayz
                     display= 'week'
                     date = {moment()}
                 events = {bookings}/>*/}
