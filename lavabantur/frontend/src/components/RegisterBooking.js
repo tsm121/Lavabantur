@@ -24,7 +24,7 @@ class RegisterBooking extends Component {
             date: "",
             startTime: "",
             endTime:"",
-            selectedMachine: "",
+            selectedMachine: "1",
         }
 
         this.handleRegisterNewBookingButton = this.handleRegisterNewBookingButton.bind(this)
@@ -136,8 +136,9 @@ class RegisterBooking extends Component {
 
 
     render() {
-        const {visible, confirmLoading, ModalText} = this.state
-        const {listValues,selectedMachine} = this.props
+        const {visible, confirmLoading, ModalText, selectedMachine} = this.state
+        let {listValues} = this.props
+        let newListValues = listValues.slice(1,)
 
         return (
             <div>
@@ -172,7 +173,7 @@ class RegisterBooking extends Component {
 
                             <Select defaultValue={"Machine " + selectedMachine} style={{ width: "13em" }} onChange={this.handleChange.bind(this)}>
 
-                                {listValues.map( name => {
+                                {newListValues.map( name => {
                                     return (
                                         <Option key={name} value={name}>{name}</Option>
                                     )
