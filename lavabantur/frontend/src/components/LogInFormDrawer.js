@@ -15,7 +15,7 @@ class LogInFormDrawer extends Component {
     handleLogInClick () {
         const {closeDrawer} = this.props
 
-        console.log("Clicked log in")
+        //console.log("Clicked log in")
         closeDrawer()
 
     }
@@ -23,8 +23,7 @@ class LogInFormDrawer extends Component {
     handleCreateUserClick () {
         const {openRegisterDrawer} = this.props
 
-        console.log("Clicked register")
-        this.props.history.push('/register')
+        //console.log("Clicked register")
         openRegisterDrawer()
 
     }

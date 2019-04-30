@@ -19,4 +19,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("backend.urls")),
+    path('api/auth/', include('knox.urls')),
 ]

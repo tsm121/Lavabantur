@@ -4,6 +4,12 @@ import { withRouter } from 'react-router-dom'
 
 
 class RegisterFormDrawer extends Component {
+    state = {
+    username: "",
+    email:"",
+    password: "",
+    password2:"",
+  }
     constructor(props) {
         super(props);
 
@@ -14,7 +20,7 @@ class RegisterFormDrawer extends Component {
 
     handleCreateUserClick () {
         const {closeDrawer} = this.props
-
+        this.props.register(this.state.username, this.state.email, this.state.password, this.state.password2);
         console.log("Clicked create user")
         closeDrawer()
 
@@ -28,6 +34,9 @@ class RegisterFormDrawer extends Component {
 
     render() {
         return (
+            if (this.props.isAuthenticated) {
+      return <Redirect to="/" />
+    }
             <div className={"content"}>
 
                 <Row type="flex" justify="space-around" align="middle">
