@@ -58,7 +58,7 @@ class Booking extends Component {
     }
 
     render() {
-        const {listValues, selectedMachine} = this.state;
+        const {listValues} = this.state;
         const bookings = this.formatBookings()
         return (
             <div className = "booking-view-container">
@@ -78,7 +78,6 @@ class Booking extends Component {
                     <div className="button-container">
                         <RegisterBooking
                             listValues={listValues}
-                            selectedMachine={selectedMachine}
                         />
                     </div>
                 </div>

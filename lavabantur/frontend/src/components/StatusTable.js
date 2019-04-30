@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Button, Table} from "antd";
+import {Table} from "antd";
+import RegisterBooking from "./RegisterBooking";
 const { Column } = Table;
 
 class StatusTable extends Component {
@@ -7,7 +8,7 @@ class StatusTable extends Component {
         super(props);
         this.state = {
             payload: this.props.data,
-            tableData: [{key:0, washingMachine:"Undefined",status:"Undefined",available:"Undefined",booking:"Undefined"}]
+            tableData: [{key:0, washingMachine:"Undefined",status:"Undefined",available:"Undefined",booking:"Undefined"}],
         }
         this.formatData = this.formatData.bind(this)
         this.formatDate = this.formatDate.bind(this)
@@ -21,6 +22,7 @@ class StatusTable extends Component {
         this.sterilizeData()
         this.formatData()
     }
+
 
     sterilizeData () {
         const {payload} = this.state
@@ -84,7 +86,7 @@ class StatusTable extends Component {
                     washingMachine: ("Machine " + wmItem.washing_machine),
                     status: this.addStatusStyle(status),
                     available: date,
-                    booking: this.addButton(wmItem.washing_machine)
+                    booking: this.addButton()
                 }
                 tempTableData.splice(wmItem.washing_machine - 1, 1, listItem)
             }
@@ -102,7 +104,7 @@ class StatusTable extends Component {
                     washingMachine: ("Machine " + (i+1)),
                     status: this.addStatusStyle(status),
                     available: "Now",
-                    booking: this.addButton(i+1)
+                    booking: this.addButton()
                 }
 
                 tempTableData.splice(i, 1, listItem)
@@ -128,13 +130,12 @@ class StatusTable extends Component {
         })
     }
 
-    addButton (name) {
+    addButton () {
+        const {listValues} = this.props
         return (
-            <Button
-                value={name}
-            >
-                <div>Book machine {name}</div>
-            </Button>
+            <RegisterBooking
+                listValues={listValues}
+            />
         )
     }
 
