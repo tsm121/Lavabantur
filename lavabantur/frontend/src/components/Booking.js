@@ -14,7 +14,7 @@ class Booking extends Component {
         this.state = {
             payload: this.props.data,
             listValues: [],
-            selectedMachine: "1"
+            selectedMachine: "ALL"
         }
 
         this.generateListName = this.generateListName.bind(this)
@@ -25,15 +25,15 @@ class Booking extends Component {
     }
 
     handleChange(value) {
-        const machine = value.split(" ")[1];
+        const machine = value !== "All" ? value.split(" ")[1] : "ALL";
         this.setState({selectedMachine: machine});
     }
 
     generateListName() {
         const {NUM_MACHINES} = this.props
         let listValues = []
-
-        for (let i = 0; i < NUM_MACHINES; i++) {
+        listValues.push("All")
+        for (let i = 1; i < NUM_MACHINES; i++) {
             listValues.push("Machine " + i)
         }
 
@@ -47,10 +47,10 @@ class Booking extends Component {
         const bookings = this.state.payload;
         const formatted = [];
         for (var i = 0; i < bookings.length; i++){
-            if(bookings[i].washing_machine.toString() === this.state.selectedMachine){
+            if(bookings[i].washing_machine.toString() === this.state.selectedMachine || this.state.selectedMachine === 'ALL'){
                 const start_time = new Date(bookings[i].start_time);
                 const end_time = new Date(bookings[i].end_time);
-                const toAdd = {title: 'Booked', start: start_time, end: end_time};
+                const toAdd = {title: 'Machine ' + bookings[i].washing_machine.toString(), start: start_time, end: end_time};
                 formatted.push(toAdd);
             }
         }
@@ -76,7 +76,6 @@ class Booking extends Component {
                             })}
                         </Select>
                     </div>
-                    <p>{"Machine " + this.state.selectedMachine}</p>
                     <div className="button-container">
                         <Button>Add new booking</Button>
                     </div>
