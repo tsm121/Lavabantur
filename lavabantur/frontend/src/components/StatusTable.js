@@ -59,7 +59,6 @@ class StatusTable extends Component {
             let wmItem = payload[i]
             let today = new Date()
             let twoHoursBeforeStart = new Date(wmItem.start_time).setHours(new Date(wmItem.start_time).getHours()-2)
-            console.log(twoHoursBeforeStart)
             let date
             if (twoHoursBeforeStart < today && wmItem.end_time > today){
                 if (tempTableData[wmItem.washing_machine - 1] !== undefined) {
@@ -79,7 +78,7 @@ class StatusTable extends Component {
                 else if (!wmItem.used && twoHoursBeforeStart < today && wmItem.end_time > today) {
                     status = "Booked"
                 }
-    
+
                 listItem = {
                     key: wmItem.washing_machine,
                     washingMachine: ("Machine " + wmItem.washing_machine),
@@ -89,7 +88,7 @@ class StatusTable extends Component {
                 }
                 tempTableData.splice(wmItem.washing_machine - 1, 1, listItem)
             }
-            
+
         }
 
 
