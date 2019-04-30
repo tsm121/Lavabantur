@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Input, Icon, Row, Col, Popover, Button} from 'antd';
-import { withRouter } from 'react-router-dom'
 
 
 class LogInFormDrawer extends Component {
@@ -24,7 +23,6 @@ class LogInFormDrawer extends Component {
         const {openRegisterDrawer} = this.props
 
         console.log("Clicked register")
-        this.props.history.push('/register')
         openRegisterDrawer()
 
     }
@@ -93,4 +91,4 @@ class LogInFormDrawer extends Component {
     }
 }
 
-export default withRouter(LogInFormDrawer);
+export default LogInFormDrawer;

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Input, Icon, Row, Card, Popover} from 'antd';
-import { withRouter } from 'react-router-dom'
 
 
 class LogInForm extends Component {
@@ -18,7 +17,6 @@ class LogInForm extends Component {
 
     handleCreateUserClick () {
         console.log("Clicked register")
-        this.props.history.push('/register')
     }
 
     render() {
@@ -64,4 +62,4 @@ class LogInForm extends Component {
     }
 }
 
-export default withRouter(LogInForm);
+export default LogInForm;
