@@ -7,7 +7,7 @@ import { Row, Col } from 'antd';
 import Footer from "./components/Footer";
 
 const axios = require('axios');
-const NUM_MACHINES = 10
+const NUM_MACHINES = 6
 
 
 class App extends Component {

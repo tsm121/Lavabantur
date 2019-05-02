@@ -116,7 +116,7 @@ class RegisterBooking extends Component {
                 "used": false
             }
 
-         console.log(this.postData(data))
+        console.log(this.postData(data))
     }
 
     postData (data) {
@@ -155,65 +155,84 @@ class RegisterBooking extends Component {
                     onOk={this.handleOk}
                     confirmLoading={confirmLoading}
                     onCancel={this.handleCancel}
-                    style={{width:"80%"}}
+                    className={"register-modal"}
                 >
                     <Row>
 
-                        <Col>
-
+                        <Col className={"modal-response-msg"} style={ ModalText.length > 0 ? {display:"unset"} : {display:"none"}}>
                             <p>{ModalText}</p>
                         </Col>
 
+                    </Row>
 
 
-                        <Row style={ ModalText.length > 0 ? {display:"none"} : {display:"unset"}}>
+                    <Row style={ ModalText.length > 0 ? {display:"none"} : {display:"unset"}}>
+
+                        <Row>
 
 
-                        <Col>
+                            <Col className={"machine-input register-item"}>
 
-                            <Select defaultValue={"Machine " + selectedMachine} style={{ width: "13em" }} onChange={this.handleChange.bind(this)}>
+                                <p>Select machine:</p>
+                                <Select defaultValue={"Machine " + selectedMachine} style={{ width: "13em" }} onChange={this.handleChange.bind(this)}>
 
-                                {newListValues.map( name => {
-                                    return (
-                                        <Option key={name} value={name}>{name}</Option>
-                                    )
-                                })}
-                            </Select>
+                                    {newListValues.map( name => {
+                                        return (
+                                            <Option key={name} value={name}>{name}</Option>
+                                        )
+                                    })}
+                                </Select>
 
-                        </Col>
+                            </Col>
 
-                        <Col>
-
-
-                            <DatePicker
-                                placeholder={"Start date"}
-                                disabledDate={this.disabledDate}
-                                format={dateFormat}
-                                locale={locale}
-                                showTime={false}
-                                showToday={false}
-                                onChange={this.handleDateSelection}
-                            />
-                        </Col>
-                        <Col>
-                            <TimePicker
-                                defaultOpenValue={moment(timeFormat)}
-                                placeholder={"Start"}
-                                format={timeFormat}
-                                minuteStep={15}
-                                onChange={this.handleStartTimeSelection}
-                            />
-
-                            <TimePicker
-                                defaultOpenValue={moment(timeFormat)}
-                                placeholder={"End"}
-                                format={timeFormat}
-                                minuteStep={15}
-                                onChange={this.handleEndTimeSelection}
-                            />
-                        </Col>
                         </Row>
 
+                        <Row>
+                            <Col span={12}>
+
+                                <div className={"date-input register-item"}>
+
+                                    <p>Select start date:</p>
+
+                                    <DatePicker
+                                        placeholder={"Start date"}
+                                        disabledDate={this.disabledDate}
+                                        format={dateFormat}
+                                        locale={locale}
+                                        showTime={false}
+                                        showToday={false}
+                                        onChange={this.handleDateSelection}
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col className={"register-item"} span={8}>
+
+                                <p>Select start time:</p>
+
+                                <TimePicker
+                                    defaultOpenValue={moment(timeFormat)}
+                                    placeholder={"Start"}
+                                    format={timeFormat}
+                                    minuteStep={15}
+                                    onChange={this.handleStartTimeSelection}
+                                />
+                            </Col>
+                            <Col className={"register-item"} span={8}>
+
+
+                                <p>Select end date:</p>
+                                <TimePicker
+                                    defaultOpenValue={moment(timeFormat)}
+                                    placeholder={"End"}
+                                    format={timeFormat}
+                                    minuteStep={15}
+                                    onChange={this.handleEndTimeSelection}
+                                />
+                            </Col>
+                        </Row>
                     </Row>
 
                 </Modal>

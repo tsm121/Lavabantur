@@ -1,5 +1,6 @@
 body {
     padding:0;
+    height: 100%;
 }
 
 .content {
@@ -26,7 +27,6 @@ body {
 .ant-menu-sub > #register {
     position: relative !important;
 }
-
 .info-box {
     padding-top: 1em;
     padding-bottom: 1em;
@@ -121,11 +121,11 @@ body {
 }
 
 .by-day-statistics {
-    padding: 3rem 5rem 3rem 0;
+    padding: 3rem 2rem 3rem 0;
 }
 
 .by-hour-statistics {
-    padding: 3rem 0 3rem 5rem;
+    padding: 3rem 0 3rem 2rem;
 }
 .status-text {
     font-weight: bold;
@@ -149,7 +149,7 @@ body {
 
 .booking-container {
     height: 35rem;;
-    padding: 2rem;
+    padding: 2em 0 2em 0;
 }
 
 .buttons-container{
@@ -158,8 +158,25 @@ body {
     width: 100%;
 }
 
-.selector-container{
+.machine-input {
+    padding: 0em 0 1em 0;
 }
 
-.button-container{
+.date-input {
+    padding: 1em 0 1em 0;
+}
+
+
+.modal-response-msg > p{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.register-item > p {
+    margin-bottom: 0.5em;
+}
+
+.rv-xy-plot__grid-lines__line {
+    stroke: #eee;
+    stroke-width: 1;
 }

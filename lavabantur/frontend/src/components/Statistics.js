@@ -84,7 +84,7 @@ class Statistics extends Component {
                     {"start_time": "2019-12-21 16:00:00"},
                     {"start_time": "2019-04-26 11:30:21"},
                     {"start_time": "2019-04-27 15:01:23"}];*/
-        
+
         const {data} = this.props;
         let days = [{x: 1, y: 0}];
         let hours = [{x: 1, y: 0}];
@@ -95,45 +95,71 @@ class Statistics extends Component {
             days = [{x: 1, y: 0}];
             hours = [{x: 1, y: 0}];
         }
-        
+
         return (
-                <div className="statistics-container">
-                    <div className="statistics-header">
-                        <h1>Statistics</h1>
-                    </div>
-                    <div className="statistics-view">
-                        <div className = "by-day-statistics">
-                            <XYPlot
+            <div className="statistics-container">
+                <div className="statistics-header">
+                    <h1>Statistics</h1>
+                </div>
+                <div className="statistics-view">
+                    <div className = "by-day-statistics">
+
+                        <h3>Total usage per day</h3>
+                        <XYPlot
                             width={300}
-                            height={300} 
+                            height={300}
+                            color={"#1890ff"}
                             xType = "ordinal">
                             <VerticalGridLines />
                             <HorizontalGridLines />
-                            <XAxis style={{
-                                line: {stroke: '#ADDDE1'},
-                                ticks: {stroke: '#ADDDE1'},
-                                text: {stroke: 'none', fill: '#6b6b76', fontWeight: 600}
-                              }}/>
-                            <YAxis />
+                            <XAxis
+                                style={{
+                                line: {stroke: '#BBB'},
+                                ticks: {stroke: '#BBB'},
+                                text: {stroke: 'none', fill: '#000000', fontWeight: 400}
+                            }}
+                            />
+                            <YAxis
+                                style={{
+                                line: {stroke: '#BBB'},
+                                ticks: {stroke: '#BBB'},
+                                text: {stroke: 'none', fill: '#000000', fontWeight: 400}
+                            }}
+                            />
                             <VerticalBarSeries
                                 data={days}/>
-                            </XYPlot>
-                        </div>
-                        <div className="by-hour-statistics">
-                            <XYPlot
+                        </XYPlot>
+                    </div>
+                    <div className="by-hour-statistics">
+
+                        <h3>Total usage per hour</h3>
+                        <XYPlot
                             width={500}
-                            height={300} 
+                            height={300}
+                            color={"#1890ff"}
                             xType = "ordinal">
                             <VerticalGridLines />
                             <HorizontalGridLines />
-                            <XAxis />
-                            <YAxis />
+                            <XAxis
+                                style={{
+                                line: {stroke: '#BBB'},
+                                ticks: {stroke: '#BBB'},
+                                text: {stroke: 'none', fill: '#000000', fontWeight: 400}
+                            }}
+                            />
+                            <YAxis
+                                style={{
+                                line: {stroke: '#BBB'},
+                                ticks: {stroke: '#BBB'},
+                                text: {stroke: 'none', fill: '#000000', fontWeight: 400}
+                            }}
+                            />
                             <VerticalBarSeries
                                 data={hours}/>
-                            </XYPlot>
-                        </div>
+                        </XYPlot>
                     </div>
                 </div>
+            </div>
         );
     }
 }
