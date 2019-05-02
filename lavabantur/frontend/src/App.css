@@ -30,6 +30,8 @@ body {
 .info-box {
     padding-top: 1em;
     padding-bottom: 1em;
+    width: 70%;
+    text-align: center;
 }
 
 .drawer-button {
@@ -90,13 +92,23 @@ body {
     height: 30px;
 }
 
+#logo-big {
+    width: 60px;
+    height: 60px;
+    margin-right: 1em;
+}
+
 
 #login-container {
     width:25em;
 }
 
-#overview-table {
-
+.home-page {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top:2em;
+    margin-bottom: 2em;
 }
 
 .center-container {
